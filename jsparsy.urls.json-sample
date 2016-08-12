@@ -1,0 +1,7 @@
+[
+{"url": "http://localhost/", "status": 200, "depth": 1, "referer": ""},
+{"url": "http://localhost/todo", "status": 200, "depth": 2, "referer": "http://localhost/"},
+{"url": "http://localhost/faq", "status": 200, "depth": 2, "referer": "http://localhost/"},
+{"url": "http://localhost/user/profile", "status": 200, "depth": 2, "referer": "http://localhost/"},
+{"url": "http://localhost/user/bookmarks", "status": 200, "depth": 2, "referer": "http://localhost/"}
+]
