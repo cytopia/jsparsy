@@ -35,34 +35,34 @@ var fs = require('fs');
 //------------------------------------------------------------
 
 // Check configuration file cli argument
-if (!casper.cli.has(0)) {
+if (!casper.cli.has('conf')) {
 	casper.echo('No configuration file specified', 'ERROR');
-	casper.echo('Usage: runtime-errors.js <config.json> <urls.json>');
-	//casper.done(1);
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json');
+	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
 }
 // Check url's file cli argument
-if (!casper.cli.has(1)) {
+if (!casper.cli.has('urls')) {
 	casper.echo('No url file specified', 'ERROR');
-	casper.echo('Usage: runtime-errors.js <config.json> <urls.json>');
-	//casper.done(1);
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json');
+	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
 }
 // Check if the file actually exists
-if (!fs.exists(casper.cli.get(0))) {
-	casper.echo('Config file: "' + casper.cli.get(0) + '" does not exist', 'ERROR');
-	casper.echo('Usage: runtime-errors.js <config.json> <urls.json>');
-	//casper.done(1);
+if (!fs.exists(casper.cli.get('conf'))) {
+	casper.echo('Config file: "' + casper.cli.get('conf') + '" does not exist', 'ERROR');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json');
+	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
 }
 // Check if the file actually exists
-if (!fs.exists(casper.cli.get(1))) {
-	casper.echo('Url file: "' + casper.cli.get(1) + '" does not exist', 'ERROR');
-	casper.echo('Usage: runtime-errors.js <config.json> <urls.json>');
-	//casper.done(1);
+if (!fs.exists(casper.cli.get('urls'))) {
+	casper.echo('Url file: "' + casper.cli.get('urls') + '" does not exist', 'ERROR');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json');
+	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
 }
@@ -71,8 +71,8 @@ if (!fs.exists(casper.cli.get(1))) {
 //------------------------------------------------------------
 // Includes
 //------------------------------------------------------------
-var config	= require(casper.cli.get(0));
-var urls	= require(casper.cli.get(1));
+var config	= require(casper.cli.get('conf'));
+var urls	= require(casper.cli.get('urls'));
 
 
 
