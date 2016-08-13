@@ -7,6 +7,7 @@ It is capable of doing a full POST or GET login prior checking the given URLs.
 
 * [CasperJS](http://casperjs.org/)
 * [PhantomJS](http://phantomjs.org/)
+* [crawlpy](https://github.com/cytopia/crawlpy)
 
 
 ## Usage
