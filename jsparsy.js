@@ -37,7 +37,7 @@ var fs = require('fs');
 // Check configuration file cli argument
 if (!casper.cli.has('conf')) {
 	casper.echo('No configuration file specified', 'ERROR');
-	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
 	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
@@ -45,15 +45,24 @@ if (!casper.cli.has('conf')) {
 // Check url's file cli argument
 if (!casper.cli.has('urls')) {
 	casper.echo('No url file specified', 'ERROR');
-	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
 	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
 }
+// Check url's file cli argument
+if (!casper.cli.has('server-errors')) {
+	casper.echo('Must specify --server-errors=yes|no', 'ERROR');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
+	casper.done(1);
+	casper.exit(1);
+	//phantom.exit(1);
+}
+
 // Check if the file actually exists
 if (!fs.exists(casper.cli.get('conf'))) {
 	casper.echo('Config file: "' + casper.cli.get('conf') + '" does not exist', 'ERROR');
-	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
 	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
@@ -61,18 +70,26 @@ if (!fs.exists(casper.cli.get('conf'))) {
 // Check if the file actually exists
 if (!fs.exists(casper.cli.get('urls'))) {
 	casper.echo('Url file: "' + casper.cli.get('urls') + '" does not exist', 'ERROR');
-	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
 	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
 }
-
+// Check if server-errors is on or off
+if (casper.cli.get('server-errors') != 'yes' && casper.cli.get('server-errors') != 'no') {
+	casper.echo('Must specify --server-errors=yes|no', 'ERROR');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
+	casper.done(1);
+	casper.exit(1);
+	//phantom.exit(1);
+}
 
 //------------------------------------------------------------
 // Includes
 //------------------------------------------------------------
 var config	= require(casper.cli.get('conf'));
 var urls	= require(casper.cli.get('urls'));
+
 
 
 
@@ -85,6 +102,7 @@ var login_url	= base_url + config.login.action;
 /**
  * Error storage
  */
+var show_srv_err	= (casper.cli.get('server-errors') == 'yes') ? true : false
 var errors_runtime	= [];
 var errors_server	= [];
 var errors_console	= [];
@@ -139,13 +157,15 @@ casper.on('remote.message', function(msg) {
  * On Resource Error (Server error)
  */
 casper.on('resource.error', function(resourceError) {
-	this.echo('--------------------------------------------------------------------------------', 'ERROR');
-	this.echo('[SERVER ERROR]', 'WARNING');
-	this.echo('Error:    ' + resourceError.errorString, 'WARNING');
-	this.echo('URL:      ' + resourceError.url, 'WARNING');
-	this.echo('Code:     ' + resourceError.errorCode, 'WARNING');
-	this.echo('ID:       ' + resourceError.id, 'WARNING');
-	errors_server.push(resourceError.errorString);
+	if (show_srv_err) {
+		this.echo('--------------------------------------------------------------------------------', 'ERROR');
+		this.echo('[SERVER ERROR]', 'WARNING');
+		this.echo('Error:    ' + resourceError.errorString, 'WARNING');
+		this.echo('URL:      ' + resourceError.url, 'WARNING');
+		this.echo('Code:     ' + resourceError.errorCode, 'WARNING');
+		this.echo('ID:       ' + resourceError.id, 'WARNING');
+		errors_server.push(resourceError.errorString);
+	}
 });
 
 
@@ -245,11 +265,13 @@ casper.run(function() {
 		this.echo('No console.log found', 'INFO');
 	}
 
-	// Server errors (http >= 500) [don't give a shit]
-	if (errors_server.length > 0) {
-		this.echo(errors_server.length + ' Server errors found', 'WARNING');
-	} else {
-		this.echo('No Server errors found', 'INFO');
+	if (show_srv_err) {
+		// Server errors (http >= 500) [don't give a shit]
+		if (errors_server.length > 0) {
+			this.echo(errors_server.length + ' Server errors found', 'WARNING');
+		} else {
+			this.echo('No Server errors found', 'INFO');
+		}
 	}
 
 	casper.exit(exit_code);

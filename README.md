@@ -13,7 +13,7 @@ It is capable of doing a full POST or GET login prior checking the given URLs.
 ## Usage
 
 ```shell
-casperjs jsparsy.js --config=/path/to/config.json --urls=/path/to/urls.json
+casperjs jsparsy.js --config=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes|no
 ```
 
 ## How to configure jsparsy
