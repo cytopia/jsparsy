@@ -37,7 +37,7 @@ var fs = require('fs');
 // Check configuration file cli argument
 if (!casper.cli.has('conf')) {
 	casper.echo('No configuration file specified', 'ERROR');
-	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes|no');
 	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
@@ -45,7 +45,7 @@ if (!casper.cli.has('conf')) {
 // Check url's file cli argument
 if (!casper.cli.has('urls')) {
 	casper.echo('No url file specified', 'ERROR');
-	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes|no');
 	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
@@ -53,7 +53,7 @@ if (!casper.cli.has('urls')) {
 // Check url's file cli argument
 if (!casper.cli.has('server-errors')) {
 	casper.echo('Must specify --server-errors=yes|no', 'ERROR');
-	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes|no');
 	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
@@ -62,7 +62,7 @@ if (!casper.cli.has('server-errors')) {
 // Check if the file actually exists
 if (!fs.exists(casper.cli.get('conf'))) {
 	casper.echo('Config file: "' + casper.cli.get('conf') + '" does not exist', 'ERROR');
-	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes|no');
 	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
@@ -70,7 +70,7 @@ if (!fs.exists(casper.cli.get('conf'))) {
 // Check if the file actually exists
 if (!fs.exists(casper.cli.get('urls'))) {
 	casper.echo('Url file: "' + casper.cli.get('urls') + '" does not exist', 'ERROR');
-	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes|no');
 	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
@@ -78,7 +78,7 @@ if (!fs.exists(casper.cli.get('urls'))) {
 // Check if server-errors is on or off
 if (casper.cli.get('server-errors') != 'yes' && casper.cli.get('server-errors') != 'no') {
 	casper.echo('Must specify --server-errors=yes|no', 'ERROR');
-	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes');
+	casper.echo('Usage: runtime-errors.js --conf=/path/to/config.json --urls=/path/to/urls.json --server-errors=yes|no');
 	casper.done(1);
 	casper.exit(1);
 	//phantom.exit(1);
@@ -122,7 +122,7 @@ var errors_console	= [];
  * Nice self-checking stuff ;-)
  */
 casper.on('complete.error', function(err) {
-	this.die("Complete callback has failed: " + err);
+	this.die('Complete callback has failed: ' + err);
 });
 
 
@@ -260,7 +260,6 @@ casper.run(function() {
 	// Console.log found (Abort with error)
 	if (errors_console.length > 0) {
 		this.echo(errors_console.length + ' console.log found', 'WARNING');
-		exit_code = 1;
 	} else {
 		this.echo('No console.log found', 'INFO');
 	}
